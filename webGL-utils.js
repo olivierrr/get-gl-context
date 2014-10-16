@@ -62,16 +62,20 @@
         // get gl context
         var gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl')
 
+        var compiled_vs = compileShader(gl, 'vertex', vertexShader)
+
+        var compiled_fs = compileShader(gl, 'fragment', fragmentShader)
+
         gl.program = gl.createProgram()
-        gl.attachShader(gl.program, compileShader(gl, 'vertex', vertexShader))
-        gl.attachShader(gl.program, compileShader(gl, 'fragment', fragmentShader))
+        gl.attachShader(gl.program, compiled_vs)
+        gl.attachShader(gl.program, compiled_fs)
         gl.linkProgram(gl.program)
 
         if (!gl.getProgramParameter(gl.program, gl.LINK_STATUS)) {
             warn('could not link the shader program!')
             gl.deleteProgram(gl.program)
-            gl.deleteProgram(vertexShader)
-            gl.deleteProgram(fragmentShader)
+            gl.deleteProgram(compiled_vs)
+            gl.deleteProgram(compiled_fs)
             return false
         } else {
             // install program to current rendering state

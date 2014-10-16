@@ -1,3 +1,4 @@
+
 (function(root) {
 
     /**
@@ -8,6 +9,8 @@
     }
 
     /**
+     * glExists
+     *
      * @author {MrDoob} mrdoob.com
      * @protected
      */
@@ -25,12 +28,13 @@
     /**
      * compileShader
      *
+     * @param {gl-context}
      * @param {String} type - can be 'vertex' or 'fragment'
      * @param {String} source
      * @return {GL_SHADER}
      * @protected
      */
-    function compileShader(type, source) {
+    function compileShader(gl, type, source) {
         var shader = gl.createShader(type === 'vertex' ? gl.VERTEX_SHADER : gl.FRAGMENT_SHADER)
         gl.shaderSource(shader, source)
         gl.compileShader(shader)
@@ -44,28 +48,35 @@
     /**
      * getGLprog
      * 
+     * @param {Object} canvas - dom handle
      * @param {String} fragmentShader - shader source
      * @param {String} vertexShader - shader source
-     * @return {GL_PROGRAM}
+     * @return {gl-context} - returns context with program attached to it (gl.program)
      */
-    function getGLprog(fragmentShader, vertexShader) {
+    function getGLprog(canvas, fragmentShader, vertexShader) {
+
         if (!glExists()) return warn('Can\'t get GL context!')
         if (!fragmentShader) return warn('fragmentShader was not defined')
         if (!vertexShader) return warn('vertexShader was not defined')
 
-        var program = gl.createProgram()
-        gl.attachShader(program, compileShader('vertex', vertexShader))
-        gl.attachShader(program, compileShader('fragment', fragmentShader))
-        gl.linkProgram(program)
+        // get gl context
+        var gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl')
 
-        if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+        gl.program = gl.createProgram()
+        gl.attachShader(gl.program, compileShader(gl, 'vertex', vertexShader))
+        gl.attachShader(gl.program, compileShader(gl, 'fragment', fragmentShader))
+        gl.linkProgram(gl.program)
+
+        if (!gl.getProgramParameter(gl.program, gl.LINK_STATUS)) {
             warn('could not link the shader program!')
-            gl.deleteProgram(program)
+            gl.deleteProgram(gl.program)
             gl.deleteProgram(vertexShader)
             gl.deleteProgram(fragmentShader)
             return false
         } else {
-            return program
+            // install program to current rendering state
+            gl.useProgram(gl.program)
+            return gl
         }
     }
 

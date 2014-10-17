@@ -1,28 +1,30 @@
 
-(function(root) {
+;(function(root, factory) {
+
+    // AMD
+    if (typeof define === 'function' && define.amd) {
+        define('progressbar', [], function() {
+            return factory()
+        })
+    }
+
+    // browserify
+    else if (typeof module !== 'undefined' && module.exports) {
+        module.exports = factory()
+    }
+
+    // Browser globals
+    else {
+        root.getGLprog = factory()
+    }
+
+}(this, function() {
 
     /**
      * log util
      */
     function warn (str) {
         !!console.warn ? console.warn(str) : console.log(str)
-    }
-
-    /**
-     * glExists
-     *
-     * @author {MrDoob} mrdoob.com
-     * @protected
-     */
-    function glExists () {
-        return (function () { 
-            try {
-                var canvas = document.createElement( 'canvas' )
-                return !!window.WebGLRenderingContext && (canvas.getContext('webgl') || canvas.getContext('experimental-webgl'))
-            } catch (e) {
-                return null
-            }
-        })()
     }
 
     /**
@@ -40,6 +42,7 @@
         gl.compileShader(shader)
         if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
             warn("could not compile " + type + " shader:\n\n" + gl.getShaderInfoLog(shader))
+            gl.deleteShader(shader)
             return null
         } else {
             return shader
@@ -56,14 +59,14 @@
      */
     function getGLprog(canvas, fs, vs) {
 
-        if (!glExists()) warn('Can\'t get GL context!')
+        var gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl') || null
+        if (!gl) warn('webGL is not supported in this device')
+
         else if (!canvas) warn('canvas was not defined')
         else if (typeof fs !== 'string') warn('fragmentShader was not defined or isn\'t a string')
         else if (typeof vs !== 'string') warn('vertexShader was not defined or isn\'t a string')
-        else {
 
-            // get gl context
-            var gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl')
+        else {
 
             var compiled_vs = compileShader(gl, 'vertex', vs)
             var compiled_fs = compileShader(gl, 'fragment', fs)
@@ -82,15 +85,13 @@
                 gl.deleteProgram(compiled_fs)
                 return null
             } else {
-                // install program to current rendering state
                 gl.useProgram(gl.program)
                 return gl
             }
         }
-
         return null
     }
 
-    root.getGLprog = getGLprog
+    return getGLprog
 
-})(typeof module !== 'undefined' && module.exports ? module.exports : this)
+}));

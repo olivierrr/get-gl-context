@@ -1,0 +1,25 @@
+{
+  "name": "webGL-utils",
+  "version": "1.0.0",
+  "description": "webGL-utils",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/olivierrr/webGL-utils"
+  },
+  "keywords": [
+    "webgl",
+    "gl",
+    "shader",
+    "compile"
+  ],
+  "author": "olivierrr",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/olivierrr/webGL-utils/issues"
+  },
+  "homepage": "https://github.com/olivierrr/webGL-utils/fluid"
+}

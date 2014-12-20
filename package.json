@@ -1,14 +1,14 @@
 {
-  "name": "webgl-utils",
-  "version": "1.0.1",
-  "description": "webgl-utils",
+  "name": "get-gl-context",
+  "version": "1.0.2",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/olivierrr/webGL-utils"
+    "url": "https://github.com/olivierrr/get-gl-context"
   },
   "keywords": [
     "webgl",
@@ -19,7 +19,7 @@
   "author": "olivierrr",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/olivierrr/webGL-utils/issues"
+    "url": "https://github.com/olivierrr/get-gl-context/issues"
   },
-  "homepage": "https://github.com/olivierrr/webGL-utils/fluid"
+  "homepage": "https://github.com/olivierrr/get-gl-context"
 }

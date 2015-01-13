@@ -1,5 +1,7 @@
 ## usage
 
+#### use [stack.gl packages](http://stack.gl) instead!
+
 ```js
 var canvas = $('#myCanvas')
 var fragmentShader = 'my valid fs'
